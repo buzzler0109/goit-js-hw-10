@@ -6,6 +6,8 @@ import 'izitoast/dist/css/iziToast.min.css';
 const startBtn = document.querySelector('[data-start]');
 const input = document.querySelector('#datetime-picker');
 
+startBtn.setAttribute('disabled', 'true');
+
 let userSelectedDate;
 let options = {
   enableTime: true,
@@ -44,8 +46,36 @@ function onStartClick() {
     const diff = userSelectedDate.getTime() - Date.now();
     if (diff <= 0) {
       clearInterval(intervalId);
-      startBtn.disabled = false;
-      input.disabled = false;
+      iziToast.show({
+        theme: 'dark',
+        message: 'Do you want to reload the page?',
+        position: 'center',
+        progressBarColor: 'rgb(0, 255, 184)',
+        buttons: [
+          [
+            '<button>Ok</button>',
+            function (instance, toast) {
+              location.reload();
+            },
+            true,
+          ],
+          [
+            '<button>Close</button>',
+            function (instance, toast) {
+              instance.hide(
+                {
+                  transitionOut: 'fadeOutUp',
+                  onClosing: function (instance, toast, closedBy) {
+                    console.info('closedBy: ' + closedBy);
+                  },
+                },
+                toast,
+                'buttonName'
+              );
+            },
+          ],
+        ],
+      });
     } else {
       const time = convertMs(diff);
       days.textContent = time.days;

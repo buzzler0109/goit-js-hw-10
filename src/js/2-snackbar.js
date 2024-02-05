@@ -7,7 +7,7 @@ formEl.addEventListener('submit', onFormBtn);
 function onFormBtn(e) {
   e.preventDefault();
 
-  const delay = formEl.elements.delay.value;
+  const delay = +formEl.elements.delay.value;
   const value = formEl.elements.state.value;
 
   const promise = new Promise((resolve, reject) => {
@@ -22,7 +22,6 @@ function onFormBtn(e) {
 
   promise.then(
     res => {
-      console.log(`✅ Fulfilled promise in ${res}ms`);
       iziToast.success({
         message: `Fulfilled promise in ${res}ms`,
         position: 'topRight',
@@ -32,9 +31,8 @@ function onFormBtn(e) {
       });
     },
     err => {
-      console.log(`❌ Rejected promise with delay ${err}ms`);
       iziToast.error({
-        message: `Rejected promise with delay ${err}ms`,
+        message: `Rejected promise in ${err}ms`,
         position: 'topRight',
         timeout: 4000,
         progressBar: false,
@@ -42,5 +40,5 @@ function onFormBtn(e) {
       });
     }
   );
-  formElement.reset();
+  formEl.reset();
 }
